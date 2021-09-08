@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>	
+
+
+  <include file="$(find rokos_moveit)/launch/otokar_planning_execution.launch">
+
+    <arg name="robot_name" value="/right_rokos"/>
+    <arg name="config_path" default="$(find right_otokar_moveit_config)"/>
+
+    <arg name="scene" value="true"/>
+    <arg name="scene_filename" value="sag_sase.scene"/>
+
+  </include>
+
+  <include file="$(find rokos_moveit)/launch/otokar_planning_execution.launch">
+
+    <arg name="robot_name" value="/left_rokos"/>
+    <arg name="config_path" default="$(find left_otokar_moveit_config)"/>
+
+    <arg name="scene" value="true"/>
+    <arg name="scene_filename" value="sol_sase.scene"/>
+
+  </include>
+
+</launch>
