@@ -1,6 +1,5 @@
-#########################################################
-### SRVT ROKOS ROS Paketleri Kurulum&Kullanım Rehberi ###
-#########################################################
+
+## SRVT ROKOS ROS Paketleri Kurulum&Kullanım Rehberi ##
 
 ### SRVT'nin çalıştırılabilmesi için yapılması gereken kurulumlar:
 
