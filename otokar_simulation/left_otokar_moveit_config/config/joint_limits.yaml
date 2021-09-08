@@ -1,0 +1,39 @@
+# joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
+
+default_velocity_scaling_factor: 1.0
+default_acceleration_scaling_factor: 1.0
+
+
+# Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
+# Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+joint_limits:
+  cam1_actuator_joint:
+    has_velocity_limits: true
+    max_velocity: 4.36
+    has_acceleration_limits: true
+    max_acceleration: 1.744
+  cam2_actuator_joint:
+    has_velocity_limits: true
+    max_velocity: 2.16 #4.36 
+    has_acceleration_limits: false
+    max_acceleration: 0
+  linear_x_actuator_joint:
+    has_velocity_limits: true
+    max_velocity: 0.6899999999999 
+    has_acceleration_limits: true
+    max_acceleration: 0.275
+  linear_y1_actuator_joint:
+    has_velocity_limits: true
+    max_velocity: 0.47
+    has_acceleration_limits: true
+    max_acceleration: 0.15
+  linear_y2_actuator_joint:
+    has_velocity_limits: true
+    max_velocity: 0.47
+    has_acceleration_limits: false
+    max_acceleration: 0
+  linear_z_actuator_joint:
+    has_velocity_limits: true
+    max_velocity: 0.8
+    has_acceleration_limits: false
+    max_acceleration: 0

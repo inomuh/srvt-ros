@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="robot_name" default="sag" />
+  <arg name="robot_position" default="-x 0.0 -y 0.0 -z 0.0" /> 
+  <arg name="otokar_des" default="$(find otokar_description_v2)/urdf/otokarv3.urdf" />
+   
+  <group ns="$(arg robot_name)">
+    <param name="robot_description" textfile="$(arg otokar_des)"/>
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model $(arg robot_name) -param robot_description $(arg robot_position) "/>
+    <node pkg="rostopic" type="rostopic" name="fake_joint_calibration"
+        args="pub /calibrated std_msgs/Bool true" />
+    <node name="joint_state_controller_spawner" pkg="controller_manager" type="controller_manager"
+        args="spawn joint_state_controller" respawn="false" output="screen" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" type="string" value="$(arg robot_name)" />
+    </node>
+    <rosparam file="$(find otokar_description_v2)/params/arm_controller_ur10_custom.yaml" ns="otokar" command="load"/>
+    <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager"
+        args="spawn otokar/rokos" respawn="false" output="screen"/>
+    <rosparam file="$(find otokar_description_v2)/params/joint_state_controller.yaml" command="load" />
+    <node name="rqt_jtc" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller"/>
+  </group>
+
+</launch>

@@ -1,0 +1,9 @@
+controller_list:
+  - name: fake_rokos_left_arm_controller
+    joints:
+      - linear_x_actuator_joint
+      - linear_z_actuator_joint
+      - linear_y1_actuator_joint
+      - linear_y2_actuator_joint
+      - cam1_actuator_joint
+      - cam2_actuator_joint
