@@ -4,7 +4,7 @@
 ### SRVT'nin çalıştırılabilmesi için yapılması gereken kurulumlar:
 ------------------------------------------------------------------
 
-- ROS Noetic kurulmu için: 
+- ROS Noetic kurulumu için: 
 
 ```bash
 http://wiki.ros.org/noetic/Installation/Ubuntu
@@ -13,12 +13,20 @@ http://wiki.ros.org/noetic/Installation/Ubuntu
 - ROS bağımlılıklarının kurulumları için aşağıdaki komut çalıştırılmalıdır:
 
 ```bash
-sudo apt get install ros-noetic-controller-manager && sudo apt get install ros-noetic-joint-trajectory-controller && sudo apt get install ros-noetic-rqt-joint-trajectory-controller && sudo apt get install ros-noetic-effort-controllers
+sudo apt-get install ros-noetic-moveit && sudo apt-get install ros-noetic-controller-manager && sudo apt-get install ros-noetic-joint-trajectory-controller && sudo apt-get install ros-noetic-rqt-joint-trajectory-controller && sudo apt-get install ros-noetic-effort-controllers
+```
+- Daha sonra rosdep komutları çalıştırılmalıdır.
+
+```bash
+rosdep init && rosdep update
 ```
 
 ### Model Dosyalarının Düzenlenmesi
 
 - "model" dosyasındaki modelleri, ".gazebo/models" klasörünün içerisine ve "otokar_simulation" klasörüne çıkartın.
+
+  NOT: Eğer daha önce gazebo çalıştırılmadıysa .gazebo dosyasının oluşması için terminalden "gazebo" komutu yazılarak gazebo çalıştırılmalıdır.
+  NOT2: "models" klasörü yoksa oluşturulmalıdır.
 
 - "otokar_description_v2" dosyasını SRVT-git reposundan indirilen "otokar_simulation" içerisine atın.
 
