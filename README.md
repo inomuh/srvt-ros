@@ -25,8 +25,8 @@ sudo rosdep init && rosdep update
 
 - "model" dosyasındaki modelleri, ".gazebo/models" klasörünün içerisine ve "otokar_simulation" klasörüne çıkartın.
 
-#### NOT: Eğer daha önce gazebo çalıştırılmadıysa .gazebo dosyasının oluşması için terminalden "gazebo" komutu yazılarak gazebo çalıştırılmalıdır.
-#### NOT2: "models" klasörü yoksa oluşturulmalıdır.
+##### NOT: Eğer daha önce gazebo çalıştırılmadıysa .gazebo dosyasının oluşması için terminalden "gazebo" komutu yazılarak gazebo çalıştırılmalıdır.
+##### NOT2: "models" klasörü yoksa oluşturulmalıdır.
 
 - "otokar_description_v2" dosyasını SRVT-git reposundan indirilen "otokar_simulation" içerisine atın.
 
