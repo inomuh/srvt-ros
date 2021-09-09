@@ -18,7 +18,7 @@ sudo apt-get install ros-noetic-moveit && sudo apt-get install ros-noetic-contro
 - Daha sonra rosdep komutları çalıştırılmalıdır.
 
 ```bash
-rosdep init && rosdep update
+sudo rosdep init && rosdep update
 ```
 
 ### Model Dosyalarının Düzenlenmesi
