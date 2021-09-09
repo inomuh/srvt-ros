@@ -20,6 +20,11 @@ sudo apt-get install ros-noetic-moveit && sudo apt-get install ros-noetic-contro
 ```bash
 sudo rosdep init && rosdep update
 ```
+- Son olarak "otokar_simulation" ROS paketi, ROS çalışma alanına atılmalı ve derlenmelidir.
+
+```bash
+cd ~/catkin_ws && catkin_make && catkin_make install
+```
 
 ### Model Dosyalarının Düzenlenmesi
 
