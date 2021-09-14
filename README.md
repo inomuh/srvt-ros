@@ -94,3 +94,11 @@ Smach düğümünü çalıştırmak için:
 ```bash	
 roslaunch rokos_moveit start_rokos_smach.launch
 ```
+
+ROKOS kollarını RVİZ'den görüntülemek için:
+
+```bash	
+cd ~/catkin_ws/src/otokar_simulation/rokos_rviz
+rosrun rviz rviz -d left_rokos_rviz.rviz (ya da right_rokos_rviz.rviz)
+```
+
