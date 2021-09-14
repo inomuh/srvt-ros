@@ -81,6 +81,14 @@ Task Service'i çalıştırmak için:
 roslaunch rokos_moveit start_rokos_task_service.launch
 ```
 
+NOT:  ModuleNotFoundError: No module named 'rokos_moveit' hatası alınırsa aşağıdaki komutlar çalıştırılmalıdır:
+
+```bash
+cd ~/catkin_ws
+catkin_make
+catkin_make install
+```
+
 Smach düğümünü çalıştırmak için:
 
 ```bash	
