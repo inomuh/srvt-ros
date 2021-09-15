@@ -9,7 +9,7 @@
 ```bash
 http://wiki.ros.org/noetic/Installation/Ubuntu
 ```
-   ##### NOT: ROS kurulumu sırasında GPG key güncellenmemiş olabilir, bu nedenle Installation sayfasındaki key kodu yerine aşağıdaki kod kullanılmalıdır.
+   ##### NOT: ROS kurulumu sırasında, wiki sayfasındaki GPG key güncellenmemiş olabilir, bu nedenle Installation sayfasındaki key kodu yerine aşağıdaki kod kullanılmalıdır.
 
 ```bash
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
