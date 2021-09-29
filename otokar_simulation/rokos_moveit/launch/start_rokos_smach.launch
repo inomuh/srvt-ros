@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-	<node pkg="rokos_moveit" type="new_rokos_right_smach_node.py" name="new_rokos_right_smach_node" output="screen" />
-
-	<node pkg="rokos_moveit" type="new_rokos_left_smach_node.py" name="new_rokos_left_smach_node" output="screen" />
-
-</launch>
