@@ -1,1 +1,0 @@
-controller_joint_names: [linear_x_actuator_joint, linear_z_actuator_joint, linear_y1_actuator_joint, linear_y2_actuator_joint, cam1_actuator_joint, cam2_actuator_joint]
