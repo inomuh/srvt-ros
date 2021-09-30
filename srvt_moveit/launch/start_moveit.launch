@@ -6,7 +6,7 @@
   <include file="$(find srvt_moveit)/launch/otokar_planning_execution.launch">
 
     <arg name="robot_name" value="/right_rokos"/>
-    <arg name="config_path" default="$(find right_otokar_moveit_config)"/>
+    <arg name="config_path" default="$(find right_rokos_moveit_config)"/>
 
     <arg name="scene" value="true"/>
     <arg name="scene_filename" value="sag_sase_deneme3.scene"/>
