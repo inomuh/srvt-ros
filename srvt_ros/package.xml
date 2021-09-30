@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>srvt_ros</name>
+  <version>1.0.0</version>
+  <description>The srvt_ros package</description>
+ 
+  <maintainer email="didem.ozupektas@inovasyonmuhendislik.com">Didem OZUPEK TAS</maintainer>
+  <maintainer email="kerem.erdogmus@inovasyonmuhendislik.com">Alim Kerem ERDOGMUS</maintainer>
+
+
+  <license>Apache 2.0</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>left_rokos_moveit_config</exec_depend>
+  <exec_depend>right_rokos_moveit_config</exec_depend>
+  <exec_depend>rokos_description</exec_depend>
+  <exec_depend>srvt_gazebo</exec_depend>
+  <exec_depend>srvt_moveit</exec_depend>
+  <export>
+    <metapackage/>
+  </export>
+</package>
