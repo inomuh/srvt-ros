@@ -2,7 +2,7 @@
 <launch>
 
   <arg name="robot_name" default="right_rokos" />
-  <arg name="config_path" default="$(find right_otokar_moveit_config)"/>
+  <arg name="config_path" default="$(find right_rokos_moveit_config)"/>
   <arg name="scene" default="false" />
   <arg name="scene_filename" default="kutu_1.scene" />
 
