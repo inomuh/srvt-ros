@@ -33,7 +33,7 @@ cd ~/catkin_ws && catkin_make && catkin_make install
   ##### NOT: Eğer daha önce gazebo çalıştırılmadıysa .gazebo dosyasının oluşması için terminalden "gazebo" komutu yazılarak gazebo çalıştırılmalıdır.
   ##### NOT2: "models" klasörü yoksa oluşturulmalıdır.
 
-- "otokar_description" dosyasını SRVT-git reposundan indirilen "srvt_ros" içerisine atın.
+- "rokos_description" dosyasını SRVT-git reposundan indirilen "srvt_ros" içerisine atın.
 
 - modellerin çalışması için ~/.bashrc dosya içeriği düzenlemelerini yapın.
 
