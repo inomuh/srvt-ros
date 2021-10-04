@@ -11,6 +11,9 @@ from cv_bridge import CvBridge, CvBridgeError
 from datetime import datetime
 import time
 
+import numpy as np
+from imgaug import augmenters as iaa
+
 
 class ImageSaver(object):
     """
@@ -22,7 +25,7 @@ class ImageSaver(object):
         self.current_tof_image = None
 
         self.current_workspace = self.get_current_workspace()
-        self.dir_name = str(self.current_workspace) + 'srvt_moveit/image_file/' + str(self.group_name)
+        self.dir_name = str(self.current_workspace) + 'rokos_moveit/image_file/' + str(self.group_name)
 
         self.bridge = CvBridge()
         self.color_cam_sub = rospy.Subscriber((self.group_name + '/color_camera/image_raw'), Image, self.__color_cam_callback)
@@ -76,6 +79,25 @@ class ImageSaver(object):
                 img = self.bridge.imgmsg_to_cv2(img_msg, "32FC1") # passthrough
                 new_dir = self.dir_name + "/tof_image"
                 img_file_format = ".pgm"
+                                 
+                # TOF image normalization (solve dark image save problem)
+
+                image_name = str(img_name + "_" + self.group_name + "_" + img_type + "_" + current_time + str(img_file_format))
+                # The depth image is a single-channel float32 image 
+                depth_image = self.bridge.imgmsg_to_cv2(img_msg, "32FC1")
+
+                # Convert the depth image to a numpy array since most cv2 functions 
+                # require numpy arrays
+
+                depth_array = np.array(depth_image, dtype=np.float32)
+
+                # Normalize the depth image to fall between 0 (black) an 1 (white)
+                cv2.normalize(depth_array, depth_array, 0, 1, cv2.NORM_MINMAX)
+
+                # Process the depth image 
+                depth_display_image = depth_array*255
+
+                cv2.imwrite(os.path.join(new_dir, image_name), depth_display_image) # saving normalized tof image
 
             else:
                 img = self.bridge.imgmsg_to_cv2(img_msg, "bgr8")
