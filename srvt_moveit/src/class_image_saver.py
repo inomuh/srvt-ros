@@ -25,7 +25,7 @@ class ImageSaver(object):
         self.current_tof_image = None
 
         self.current_workspace = self.get_current_workspace()
-        self.dir_name = str(self.current_workspace) + 'rokos_moveit/image_file/' + str(self.group_name)
+        self.dir_name = str(self.current_workspace) + 'srvt_moveit/image_file/' + str(self.group_name)
 
         self.bridge = CvBridge()
         self.color_cam_sub = rospy.Subscriber((self.group_name + '/color_camera/image_raw'), Image, self.__color_cam_callback)
