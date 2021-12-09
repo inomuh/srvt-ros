@@ -9,7 +9,7 @@
     <arg name="config_path" default="$(find right_rokos_moveit_config)"/>
 
     <arg name="scene" value="true"/>
-    <arg name="scene_filename" value="sag_sase_deneme3.scene"/>
+    <arg name="scene_filename" value="right_rokos_scene.scene"/>
 
   </include>
 -->
@@ -19,7 +19,7 @@
     <arg name="config_path" default="$(find left_rokos_moveit_config)"/>
 
     <arg name="scene" value="true"/>
-    <arg name="scene_filename" value="sol_sase_deneme3.scene"/>
+    <arg name="scene_filename" value="left_rokos_scene.scene"/>
 
   </include>
 
