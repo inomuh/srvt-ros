@@ -3,7 +3,7 @@
 
   <arg name="robot_name" default="rokos" />
   <arg name="robot_position" default="-x 0.0 -y 0.0 -z 0.01" /> 
-  <arg name="urdf_path" default="$(find rokos_description)/urdf/sol_rokos.urdf"/>
+  <arg name="urdf_path" default="$(find rokos_description)/urdf/left_rokos.urdf"/><!--default-->
   <arg name="config_path" default="$(find left_rokos_moveit_config)"/>
 
 
@@ -24,6 +24,7 @@
 
 
     <include file="$(arg config_path)/launch/ros_controllers.launch"/>
+
 
 <!-- RQT Joint Trajectory Controller -->
     <!-- 

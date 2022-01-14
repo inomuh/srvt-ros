@@ -2,9 +2,9 @@
 
 <launch>
 	
-<!--	
-	<node pkg="srvt_moveit" type="new_rokos_right_smach_node.py" name="new_rokos_right_smach_node" output="screen" />
+	
+	<node pkg="srvt_moveit" type="rokos_right_smach_node.py" name="rokos_right_smach_node" output="screen" />
+<!--
+	<node pkg="srvt_moveit" type="rokos_left_smach_node.py" name="rokos_left_smach_node" output="screen" />
 -->
-	<node pkg="srvt_moveit" type="new_rokos_left_smach_node.py" name="new_rokos_left_smach_node" output="screen" />
-
 </launch>

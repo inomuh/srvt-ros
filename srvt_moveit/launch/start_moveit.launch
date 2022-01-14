@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <launch>	
-<!--
 
- 
-  <include file="$(find srvt_moveit)/launch/otokar_planning_execution.launch">
+  <include file="$(find srvt_moveit)/launch/rokos_planning_execution.launch">
 
     <arg name="robot_name" value="/right_rokos"/>
     <arg name="config_path" default="$(find right_rokos_moveit_config)"/>
@@ -12,8 +10,8 @@
     <arg name="scene_filename" value="right_rokos_scene.scene"/>
 
   </include>
--->
-  <include file="$(find srvt_moveit)/launch/otokar_planning_execution.launch">
+ <!--
+  <include file="$(find srvt_moveit)/launch/rokos_planning_execution.launch">
 
     <arg name="robot_name" value="/left_rokos"/>
     <arg name="config_path" default="$(find left_rokos_moveit_config)"/>
@@ -22,5 +20,5 @@
     <arg name="scene_filename" value="left_rokos_scene.scene"/>
 
   </include>
-
+-->
 </launch>

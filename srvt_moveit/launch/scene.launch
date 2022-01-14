@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
 
-    <arg name="s_path" default="$(find right_rokos_moveit_config)"/>
-    <arg name="s_filename" default="kutu_1.scene"/>
+    <arg name="s_path" default="$(find right_rokos_moveit_config)"/> <!--default-->
+    <arg name="s_filename" default="scene.scene"/>
 
     <arg name="scene_file" value="$(arg s_path)/scenes/$(arg s_filename)"/>
 
