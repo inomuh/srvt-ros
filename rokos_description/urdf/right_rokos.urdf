@@ -1,0 +1,617 @@
+<robot name="rokos">
+  <link name="world" />
+
+  <link name="linear_x_link">
+   <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia ixx="7.416" ixy="0" ixz="0"
+               iyy="2200.416" iyz="0"
+               izz="2138.666" />
+      <mass value="100" />
+    </inertial>
+    <visual>
+      <origin xyz="4.62 -3.17 1.11" rpy="0 0 0.0" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/1_Eksen_SYM.stl" scale="0.001 0.001 0.001"/>	
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0.0" />
+      <geometry>
+        <box size="16.2 0.8 0.486"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link="linear_x_link" />
+    <origin xyz="-0.0 0.0059 0.243" rpy="0.0 0.0 0.0" />
+  </joint>
+  
+  <link name="linear_x_actuator" >
+      <visual>
+        <origin xyz="-1.32 -3.17 0.86" rpy="0 0 0.0" />
+        <geometry>
+          <mesh filename="package://rokos_description/meshes/robot_mirror_cad/1_Eksen_Hareketli_SYM.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="-1.32 -3.17 0.86" rpy="0 0 0.0" />
+        <geometry>
+          <mesh filename="package://rokos_description/meshes/robot_mirror_cad/1_Eksen_Hareketli_SYM.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+
+     <inertial>
+        <origin xyz="0.0 0.0 -0.1" rpy="0 0 0" />
+       <inertia ixx="0.4" ixy="0" ixz="0"
+                 iyy="1.0271" iyz="0"
+                 izz="1.6104" />
+        <mass value="10" />
+     </inertial>
+     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+  </link>
+
+
+  <gazebo reference="linear_x_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  
+  <gazebo reference="linear_x_actuator">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <joint name="linear_x_actuator_joint" type="prismatic">
+    <origin xyz="-7.37 0 0.25" rpy="0 0 0" />
+    <parent link="linear_x_link" />
+    <child link="linear_x_actuator" />
+    <axis xyz="1 0 0" />
+    <limit lower="0.0"
+           upper="14.721"
+           effort="100"
+           velocity="6.9" />
+    <dynamics damping="1.0" friction="1.0" />
+  </joint>
+
+  <gazebo reference="linear_x_actuator_joint">
+    <implicitSpringDamper>1</implicitSpringDamper>
+  </gazebo>
+
+  <transmission name="linear_x_actuator_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="linear_x_actuator_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="linear_x_actuator_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+ <link name="linear_z_link">
+   <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <inertia ixx="0.3002" ixy="0" ixz="0"
+                iyy="0.2302" iyz="0"
+                izz="0.1220" />
+       <mass value="5" />
+    </inertial>
+
+    <visual>
+      <origin xyz="1.32 -3.17 0.86" rpy="0 0 3.1415" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/2_Eksen_Sabit_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="1.32 -3.17 0.86" rpy="0 0 3.1415" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/2_Eksen_Sabit_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="linear_z_joint" type="fixed">
+    <origin xyz="0 0 0.0" rpy="0.0 0 0" />
+    <parent link="linear_x_actuator" />
+    <child link="linear_z_link" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <gazebo reference="linear_z_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+ 
+ <link name="linear_z_actuator">
+   <inertial>
+      <origin xyz="0.0 0.0 0" rpy="0 0 0" />
+      <inertia ixx="0.0617" ixy="0" ixz="0"
+               iyy="0.0541" iyz="0"
+               izz="0.0342" />
+      <mass value="1" />
+    </inertial>
+
+    <visual>
+      <origin xyz="1.32 -2.97 0.34" rpy="0 0 3.1415" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/2_Eksen_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    
+    <visual>
+      <origin xyz="1.32 -2.99 0.34" rpy="0 0 3.1415" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/3_Eksen_SYM_rev2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    
+    <collision>
+      <origin xyz="1.32 -2.97 0.34" rpy="0 0 3.1415" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/2_Eksen_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    
+    <collision>
+      <origin xyz="1.32 -2.99 0.34" rpy="0 0 3.1415" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/3_Eksen_SYM_rev2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="linear_z_actuator_joint" type="prismatic">
+    <parent link="linear_z_link" />
+    <child link="linear_z_actuator" />
+    <axis xyz="0 0 1" />
+    <limit lower="0.0"
+           upper="3.435"
+           effort="1000"
+           velocity="8" />
+    <origin xyz="0 -0.2 0.509" rpy="0 0 0" />
+    <dynamics damping="20.0" friction="500.0" />
+  </joint>
+
+  <gazebo reference="linear_z_actuator_joint">
+    <implicitSpringDamper>1</implicitSpringDamper>
+  </gazebo>
+
+  <transmission name="linear_z_actuator_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="linear_z_actuator_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="linear_z_actuator_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo reference="linear_z_actuator">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+ <link name="linear_y1_actuator">
+   <inertial>
+      <origin xyz="0.0 -0.19 -0.1" rpy="0 0 0" />
+      <inertia ixx="0.6387" ixy="0" ixz="0"
+               iyy="0.045" iyz="0"
+               izz="0.6387" />
+      <mass value="3" />
+    </inertial>
+
+    <visual>
+      <origin xyz="-1.62 3.057 0.4" rpy="0 0 0.0" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/Orta_Konstruksiyon_SYM_rev2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="-1.62 3.057 0.4" rpy="0 0 0.0" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/Orta_Konstruksiyon_SYM_rev2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="linear_y1_actuator_joint" type="prismatic">
+    <parent link="linear_z_actuator" />
+    <child link="linear_y1_actuator" />
+
+    <axis xyz="0 1 0" />
+    <limit lower="0.0"
+           upper="0.9"
+           effort="1000"
+           velocity="4.7" />
+    <origin xyz="-0.3 0.0148 -0.1" rpy="0 0 3.1415" />
+    <dynamics damping="20.0" friction="500.0" />
+  </joint>
+
+  <gazebo reference="linear_y1_actuator_joint">
+    <implicitSpringDamper>1</implicitSpringDamper>
+  </gazebo>
+
+  <transmission name="linear_y1_actuator_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="linear_y1_actuator_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="linear_y1_actuator_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <gazebo reference="linear_y1_actuator">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+ <link name="linear_y2_actuator">
+   <inertial>
+      <origin xyz="0 -0.12 -0.09" rpy="0 0 0" />
+      <inertia ixx="0.6093" ixy="0" ixz="0"
+               iyy="0.03105" iyz="0"
+               izz="0.6231" />
+      <mass value="3" />
+    </inertial>
+
+    <visual>
+      <origin xyz="-1.82 2.9965 0.44" rpy="0 0 0.0" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/Dis_Konstruksiyon_SYM_rev2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="-1.82 2.9965 0.44" rpy="0 0 0.0" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/Dis_Konstruksiyon_SYM_rev2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="linear_y2_actuator_joint" type="prismatic">
+    <parent link="linear_y1_actuator" />
+    <child link="linear_y2_actuator" />
+    <axis xyz="0 1 0" />
+    <limit lower="0.0"
+           upper="0.9"
+           effort="1000"
+           velocity="4.7" />
+    <origin xyz="0.2 0.0118 0.0" rpy="0 0 0.0" />
+    <dynamics damping="20.0" friction="500.0" />
+  </joint>
+
+  <gazebo reference="linear_y2_actuator_joint">
+    <implicitSpringDamper>1</implicitSpringDamper>
+  </gazebo>
+
+  <transmission name="linear_y2_actuator_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="linear_y2_actuator_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="linear_y2_actuator_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <gazebo reference="linear_y2_actuator">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+ <link name="cam1_link">
+   <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia ixx="0.0010683" ixy="0" ixz="0"
+               iyy="0.0010683" iyz="0"
+               izz="0.000735" />
+      <mass value="0.1" />
+    </inertial>
+
+    <visual>
+      <origin xyz="-1.82 2.3675 0.6" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/4_Eksen_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="-1.82 2.3675 0.6" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/4_Eksen_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+    <joint name="cam1_joint" type="fixed">
+      <parent link="linear_y2_actuator" />
+      <child link = "cam1_link" />
+      <origin xyz="0.0 0.629 -0.2" rpy="0.0 0.0 0.0" />
+      <axis xyz="1 0 0" />
+    </joint>
+  <gazebo reference="cam1_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+ <link name="cam1_actuator">
+   <inertial>
+      <origin xyz="0 -0.05 -0.05" rpy="0 0 0" />
+      <inertia ixx="0.01365" ixy="0" ixz="0"
+               iyy="0.007333" iyz="0"
+               izz="0.01365" />
+      <mass value="1.1" />
+    </inertial>
+
+    <visual>
+      <origin xyz="-2.26 -1.8425 0.701" rpy="0 0 1.570796" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/5_Eksen_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="-2.26 -1.8425 0.701" rpy="0 0 1.570796" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/5_Eksen_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+ </link>
+    <joint name="cam1_actuator_joint" type="revolute">
+      <parent link="cam1_link" />
+      <child link = "cam1_actuator" />
+      <origin xyz="0.02 0.108 -0.1" rpy="0.0 0.0 0.0" />
+      <axis xyz="0 0 1" />
+        <limit lower="-6.29" upper="6.29" effort="200" velocity="43.6"/>
+      <dynamics damping="0.0" friction="0.0"/>
+    </joint>
+
+    <gazebo reference="cam1_actuator_joint">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+
+  <transmission name="cam1_actuator_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="cam1_actuator_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="cam1_actuator_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <gazebo reference="cam1_actuator">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+ <link name="cam2_actuator">
+   <inertial>
+      <origin xyz="0 0 0" rpy="-0.3 0 0" />
+      <inertia ixx="0.007121" ixy="0" ixz="0"
+               iyy="0.003221" iyz="0"
+               izz="0.00631" />
+      <mass value="0.5" />
+    </inertial>
+
+   <visual>
+      <origin xyz="-2.258 -1.9625 0.756" rpy="0 0 1.570796" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/Kamera_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+
+    <visual>
+      <origin xyz="0.045 0.183 0.107" rpy="0 0 0.0" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/Basler _Lens _6mm_CMount _v02.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-2.258 -1.9625 0.756" rpy="0 0 1.570796" />
+      <geometry>
+        <mesh filename="package://rokos_description/meshes/robot_mirror_cad/Kamera_SYM.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+</link>
+    <joint name="cam2_actuator_joint" type="revolute">
+      <parent link="cam1_actuator" />
+      <child link = "cam2_actuator" />
+      <axis xyz="0 1 0" />
+      <origin xyz="-0.002 0.12 -0.055" rpy="0.0 0.0 0.0" />
+        <limit lower="-6.29" upper="6.29" effort="100" velocity="43.6"/>
+      <dynamics damping="0.0" friction="1"/>
+    </joint>
+
+    <gazebo reference="cam2_actuator">
+      <implicitSpringDamper>1</implicitSpringDamper>
+    </gazebo>
+
+  <transmission name="cam2_actuator_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="cam2_actuator_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="cam2_actuator_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+ <link name="color_cam_link">
+   <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia ixx="0.000019" ixy="0" ixz="0"
+               iyy="0.000019" iyz="0"
+               izz="0.0000126" />
+      <mass value="0.09" />
+    </inertial>
+    <visual>
+      <origin xyz="-0.025 0.00 -0.000" rpy="1.570796 0 -1.570796" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/Basler ace GigE C-Mount v01.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+<!--    <visual>
+      <origin xyz="2.767 1.7353 -4.009" rpy="0 0 3.1415" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/Giga_Gorus_Acisi.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>    -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+ </link>
+ 
+    <joint name="color_cam_joint" type="fixed">
+      <parent link="cam2_actuator" />
+      <child link = "color_cam_link" />
+      <axis xyz="0 1 0" />
+      <origin xyz="0.016 0.1829 0.107" rpy="0 0.0 3.1415" />
+    </joint>
+  <gazebo reference="color_cam_link">
+    <sensor type="camera" name="color_camera">
+      <visualize>true</visualize>
+      <update_rate>10.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.4</horizontal_fov>
+        <image>
+          <width>640</width> <!--3856-2764 -->
+          <height>480</height>
+          <format>L8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>7.0</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>10.0</updateRate>
+        <cameraName>color_camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>color_cam_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <gazebo reference="cam2_actuator">
+    <material>Gazebo/Yellow</material>
+  </gazebo>
+    <gazebo reference="color_cam_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+ <link name="tof_cam_link">
+   <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia ixx="0.000798" ixy="0" ixz="0"
+               iyy="0.000282" iyz="0"
+               izz="0.000827" />
+      <mass value="0.4" />
+    </inertial>
+    <visual>
+      <origin xyz="-0.0 0.00 -0.000" rpy="1.570796 0 1.570796" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/Basler _ToF _GigE _v02.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+<!--    <visual>
+      <origin xyz="-2.8 -1.7353 -3.902" rpy="0 0 0" />
+      <geometry>
+	<mesh filename="package://rokos_description/meshes/robot_mirror_cad/TOF_Gorus_Acisi.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>    -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+ </link>
+    <joint name="tof_cam_joint" type="fixed">
+      <parent link="cam2_actuator" />
+      <child link = "tof_cam_link" />
+      <axis xyz="0 1 0" />
+      <origin xyz="0.0503 0.1829 0.0020" rpy="0 0.054 3.1415" />
+    </joint>   
+  <gazebo reference="tof_cam_link">
+    <sensor type="depth" name="tof_camera">
+      <visualize>true</visualize>
+      <update_rate>20.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>0.99</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>L8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>7.0</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+        <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
+          <baseline>0.2</baseline>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate>
+          <cameraName>tof_camera</cameraName>
+          <imageTopicName>color/image_raw</imageTopicName>
+          <cameraInfoTopicName>color/camera_info</cameraInfoTopicName>
+          <depthImageTopicName>depth/image_raw</depthImageTopicName>
+          <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+          <pointCloudTopicName>depth/points</pointCloudTopicName>
+          <frameName>tof_cam_link</frameName>
+          <pointCloudCutoff>0.0</pointCloudCutoff>
+          <pointCloudCutoffMax>13.0</pointCloudCutoffMax>
+          <distortionK1>0</distortionK1>
+          <distortionK2>0</distortionK2>
+          <distortionK3>0</distortionK3>
+          <distortionT1>0</distortionT1>
+          <distortionT2>0</distortionT2>
+          <CxPrime>0</CxPrime>
+          <Cx>0</Cx>
+          <Cy>0</Cy>
+          <focalLength>0</focalLength>
+          <hackBaseline>0</hackBaseline>
+        </plugin>
+    </sensor>
+  </gazebo>  
+  
+ <gazebo>
+    <plugin name="ros_control" filename="libgazebo_ros_control.so">
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+
+    </plugin>
+  </gazebo>
+
+</robot>
