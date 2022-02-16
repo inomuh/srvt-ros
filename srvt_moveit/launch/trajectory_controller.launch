@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>	
 
-  <arg name="robot_name" default="/right_rokos"/>
+  <arg name="robot_name" default="/rokos"/> 
 
   <group ns="$(arg robot_name)">
 

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>	
 
-<node name="start_system_node" pkg="srvt_moveit" type="start_system_node.py"/>
-
+	<node name="start_system_node" pkg="srvt_moveit" type="start_system_node.py"/>
 
 </launch>

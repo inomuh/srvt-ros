@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Moveit plan class"""
+"""
+MoveitPlanClass
+Rokos robot kollarindaki planner ve controllerlari kullanmak için
+moveit kütüphanelerinin bulunduğu classtır.
+"""
 
 import copy
 import math
@@ -17,14 +21,14 @@ from log_node import LogClass
 class MoveitPlanClass():
     """
         MoveitPlanClass
-        Rokos robot kollarindaki planner ve controllerlari kullanmak
-        için moveit kütüphanelerinin bulunduğu classtır.
+
+        Rokos robot kollarindaki planner ve controllerlari kullanmak için
+        moveit kütüphanelerinin bulunduğu classtır.
     """
-    def __init__(self, g_name, namespace=""):
+    def __init__(self, group_name, namespace=""):
         super().__init__()
 
         self.ns_name, self.rd_name = self.get_namespace_func(namespace)
-        group_name = g_name
         self.robot_desc_name = str(self.rd_name + "robot_description")
 
         self.robot = moveit_commander.RobotCommander(self.robot_desc_name, self.ns_name)
@@ -43,7 +47,7 @@ class MoveitPlanClass():
 
     @classmethod
     def get_namespace_func(cls, namespace):
-        """get_namespace_func"""
+        """get namespace_func"""
         ns_name = ""
         rd_name = ""
 
@@ -76,28 +80,31 @@ class MoveitPlanClass():
         """
             Ana hareket fonksiyonu
             Collision Free Trajectory Planning için kullanılmakta,
-            Scene'e bir nesne aktarıldıysa çarpışmasız hareket etmesi için kullanılır.
+            Scene' e bir nesne aktarıldıysa çarpışmasız hareket
+            etmesi için kullanılır.
         """
         try:
             group = self.group
-
             # hedef positionu, pose_goal değerini planlayiciya pose olarak gönderir.
             group.set_pose_target(pose_goal)
-            # Burada mevcut oluşturulan planin get_current_plan değerini almak için kullanilir.
-            (get_plan_control, get_current_plan, get_planning_time, get_error_code) = group.plan()
+            # Burada mevcut oluşturulan planin get_current_plan değerini almak
+            # için kullanilir.
+            (get_plan_control, get_current_plan, get_planning_time,\
+                 get_error_code) = group.plan()
 
             # belirtilen positionu execute eder
-            plan_exec = group.go(wait=True)
+            group.go(wait=True)
 
             group.stop()
             group.clear_pose_targets()
 
-            # Eger use_only_pose değeri True ise pose_goal sadece X,Y,Z position bilgilerini içerir.
+            # Eger use_only_pose değeri True ise pose_goal sadece X,Y,Z
+            # position bilgilerini içerir.
             if use_only_pose:
                 current_pose = self.group.get_current_pose().pose
 
-            # Eger False ise pose_goal değeri X,Y,Z position bilgilerinin yanında,
-            # quaternion olarak X,Y,Z,W bilgilerinide içermektedir.
+            # Eger False ise pose_goal değeri X,Y,Z position bilgilerinin
+            # yanında, quaternion olarak X,Y,Z,W bilgilerinide içermektedir.
             else:
                 current_pose = self.group.get_current_pose()
 
@@ -112,12 +119,12 @@ class MoveitPlanClass():
         """
             go_to_pose_goal_func fonksiyonuna gönderilecek verileri düzenler.
             Fonksiyonun inputları, go_to_pose_goal_func fonksiyonuna düzenlenerek
-            input olarak girer, return' u ise go_to_pose_goal_func fonksiyonun return'udur.
+            input olarak girer, return' u ise go_to_pose_goal_func fonksiyonun
+            return'udur.
         """
         try:
             if use_only_pose:
                 pose_goal = self.group.get_current_pose().pose
-
                 # None değerleri current olarak bırakarak, gereksiz hareket
                 # işlemini engeller.
                 # Ek planlama yapmamaktadır.
@@ -141,8 +148,8 @@ class MoveitPlanClass():
                     pose_goal.pose.orientation.y = q_y
                     pose_goal.pose.orientation.z = q_z
                     pose_goal.pose.orientation.w = q_w
-                    #print("\n\nQuaternion Result => X = {x},
-                    # Y = {y}, Z = {z}, W = {w}\n\n".format(x=q_x, y=q_y, z=q_z, w=q_w))
+                    #print("\n\nQuaternion Result => X = {x}, Y = {y},\
+                    # Z = {z}, W = {w}\n\n".format(x=q_x, y=q_y, z=q_z, w=q_w))
 
                 for index, point in enumerate(temp_position_list):
                     if point is not None:
@@ -153,8 +160,11 @@ class MoveitPlanClass():
                         elif index == 2:
                             pose_goal.pose.position.z = point
 
-            go_to_result, get_current_plan = self.go_to_pose_goal_func(pose_goal, use_only_pose)
-            print(f"\nDynamic Go to Pose Result, {go_to_result}\n")
+            go_to_result, get_current_plan = self.go_to_pose_goal_func(pose_goal,
+             use_only_pose)
+
+            result=go_to_result
+            print(f"\nDynamic Go to Pose Result, {result}\n")
 
             return go_to_result, get_current_plan
 
@@ -166,7 +176,8 @@ class MoveitPlanClass():
     def degree_to_quaternion(self, degrees_list):
         """
         Dereceyi radiana çevirerek bunları Roll, Pitch, Yaw formatına çevirir.
-        Daha sonra return olarak quaternion formatına çevirerek quaternion X,Y,Z,W ya çevirir.
+        Daha sonra return olarak quaternion formatına çevirerek quaternion X,Y,Z,W
+        ya çevirir.
         """
         radians_list = self.convert_degrees_to_radians(degrees_list)
         roll = 0.0
@@ -181,7 +192,7 @@ class MoveitPlanClass():
 
     @classmethod
     def convert_degrees_to_radians(cls, degrees_list):
-        """convert_degrees_to_radians"""
+        """Convert degrees2radians"""
         radians_list = []
 
         for item in degrees_list:
@@ -192,10 +203,8 @@ class MoveitPlanClass():
 
 
     def camera_move_joint_state_func(self, camera_position_list, tolerance=0.01, wait_value=True):
-        """
-        Kameraların hareketi için kullanılan fonksiyondur.
-        Jointlere değer vererek hareket işlemini gerçekleştirir.
-        """
+        """Kameraların hareketi için kullanılan fonksiyondur.
+        Jointlere değer vererek hareket işlemini gerçekleştirir."""
         try:
             group = self.group
 
@@ -256,11 +265,12 @@ class MoveitPlanClass():
 
 
     def create_path_plan_func(self, position_list, wpose, list_type):
-        """create_path_plan_func"""
+        """create path plan func"""
         try:
             waypoints = []
 
-            # Pozisyon listesi doluysa koordinatları uygun şekilde waypointlere dönüştürür.
+            # Pozisyon listesi doluysa koordinatları uygun şekilde waypointlere
+            # dönüştürür.
             if position_list:
                 # list type tekrardan kontrol edilir. Çoklu görev var ise
                 if list_type:
@@ -282,7 +292,7 @@ class MoveitPlanClass():
 
     @classmethod
     def schema_path_plan_func(cls, position_list, wpose):
-        """schema_path_plan_func"""
+        """schema path plan func"""
         try:
             for index, point in enumerate(position_list):
                 if point is not None:
@@ -303,56 +313,52 @@ class MoveitPlanClass():
 
 
     def add_box_func(self):
-        """
-        Scene' e kutu ekliyor.
-        """
+        """Scene' e kutu ekliyor."""
         name = "Test_Box"
 
         pose = [-2.0, -2.0, 1.0]
         dimensions = [2.5, 2.5, 2.5]
 
-        pose_geo = geometry_msgs.msg.PoseStamped()
-        pose_geo.header.frame_id = self.robot.get_planning_frame()
-        pose_geo.header.stamp = rospy.Time.now()
+        pose_stamp = geometry_msgs.msg.PoseStamped()
+        pose_stamp.header.frame_id = self.robot.get_planning_frame()
+        pose_stamp.header.stamp = rospy.Time.now()
 
-        pose_geo.pose.position.x = pose[0]
-        pose_geo.pose.position.y = pose[1]
-        pose_geo.pose.position.z = pose[2]
+        pose_stamp.pose.position.x = pose[0]
+        pose_stamp.pose.position.y = pose[1]
+        pose_stamp.pose.position.z = pose[2]
 
-        pose_geo.pose.orientation.w = 1.0
+        pose_stamp.pose.orientation.w = 1.0
 
-        self.scene.add_box(name, pose_geo, (dimensions[0], dimensions[1], dimensions[2]))
+        self.scene.add_box(name, pose_stamp, (dimensions[0], dimensions[1], dimensions[2]))
 
 
     def add_mesh_func(self):
-        """
-        Scene' e mesh ekliyor.
-        """
+        """Scene' e mesh ekliyor."""
         file_name = "/home/ros/catkin_ws/src/srvt_ros/model/bus_skeleton_rviz/model/sase-rviz.stl"
         name = "Otokar_Sase"
 
         pose = [-1.86, -3.165, 2.3]
         dimensions = [0.5, 0.5, 0.5]        # scale
 
-        pose_geo = geometry_msgs.msg.PoseStamped()
-        pose_geo.header.frame_id = self.robot.get_planning_frame()
-        pose_geo.header.stamp = rospy.Time.now()
+        pose_stamp = geometry_msgs.msg.PoseStamped()
+        pose_stamp.header.frame_id = self.robot.get_planning_frame()
+        pose_stamp.header.stamp = rospy.Time.now()
 
-        pose_geo.pose.position.x = pose[0]
-        pose_geo.pose.position.y = pose[1]
-        pose_geo.pose.position.z = pose[2]
+        pose_stamp.pose.position.x = pose[0]
+        pose_stamp.pose.position.y = pose[1]
+        pose_stamp.pose.position.z = pose[2]
 
-        pose_geo.pose.orientation.w = 1.0
+        pose_stamp.pose.orientation.w = 1.0
 
-        self.scene.add_mesh(name, pose_geo, file_name, (dimensions[0], dimensions[1],
+        self.scene.add_mesh(name, pose_stamp, file_name, (dimensions[0], dimensions[1],
          dimensions[2]))
 
 
 def all_close(goal, actual, tolerance):
-    """All_close"""
+    """all close func"""
     try:
         if isinstance(goal,list):
-            for index, j in enumerate(goal):
+            for index in enumerate(goal):
                 if abs(actual[index] - goal[index]) > tolerance:
                     return False
 
@@ -367,3 +373,4 @@ def all_close(goal, actual, tolerance):
     except Exception as err:
         print(err)
         return None
+

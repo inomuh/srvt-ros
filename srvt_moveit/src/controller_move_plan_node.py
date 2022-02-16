@@ -1,49 +1,45 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
-import copy
-import rospy
-import moveit_commander
-import moveit_msgs.msg
-import geometry_msgs.msg
-import math
-from datetime import datetime
-from math import pi
-from moveit_commander.conversions import pose_to_list
-from log_node import LogClass
-from srvt_moveit.srv import *
+"""
+Move Plan Controller Düğümü (Şimdilik ortama Scene eklemek ve
+bazı testler için kullanılıyor)
+"""
 
 import os
-import yaml
-from moveit_msgs.msg import RobotTrajectory
+import sys
+import copy
+import math
+from datetime import datetime
 import pickle
+from moveit_commander.conversions import pose_to_list
+import yaml
+import moveit_commander as mov_comm
+import moveit_msgs.msg
+import geometry_msgs.msg
+import srvt_moveit.srv as srvt_srv
+import rospy
+from log_node import LogClass
 
-class MoveitRokosPlanClass(object):
-    """MoveitRokosPlanClass"""
-    def __init__(self, g_name, ns=""):
-        super(MoveitRokosPlanClass, self).__init__()
 
-        self.ns_name, self.rd_name = self.get_namespace_func(ns)
+class MovePlanController():
+    """MovePlanController"""
+    def __init__(self, g_name, name_space=""):
+        super().__init__()
+
+        self.ns_name, self.rd_name = self.get_namespace_func(name_space)
         group_name = g_name
         self.robot_desc_name = str(self.rd_name + "robot_description")
         self.service_name = str(self.ns_name + "_image_service")
         print(self.service_name)
 
-        #moveit_commander.roscpp_initialize(sys.argv)
+        robot = mov_comm.RobotCommander(self.robot_desc_name, self.ns_name)
+        scene = mov_comm.PlanningSceneInterface(self.ns_name)
+        group = mov_comm.MoveGroupCommander(group_name, self.robot_desc_name, self.ns_name)
 
-        #joint_state_topic = [str('joint_states:=/' + str(self.ns_name) + '/joint_states')]
-        #moveit_commander.roscpp_initialize(joint_state_topic)
-        #moveit_commander.roscpp_initialize(sys.argv)
-
-        robot = moveit_commander.RobotCommander(self.robot_desc_name, self.ns_name)
-        scene = moveit_commander.PlanningSceneInterface(self.ns_name)
-
-        group = moveit_commander.MoveGroupCommander(group_name, self.robot_desc_name, self.ns_name)
-
-        display_trajectory_publisher = rospy.Publisher((self.rd_name + 'move_group/display_planned_path'),
-                                                      moveit_msgs.msg.DisplayTrajectory,
-                                                      queue_size=20)
+        display_trajectory_publisher = rospy.Publisher((self.rd_name +\
+             'move_group/display_planned_path'), moveit_msgs.msg.DisplayTrajectory,
+              queue_size=20)
 
 
         planning_frame = group.get_planning_frame()
@@ -76,21 +72,23 @@ class MoveitRokosPlanClass(object):
         self.plan_file_counter = 0
         #self.group.set_planning_time(5)         # set planning time
         self.set_planning_time_value = 5
-
+        self.box_name = None
 
     @classmethod
-    def get_namespace_func(cls, ns):
+    def get_namespace_func(cls, name_space):
+        """get namespace func"""
         ns_name = ""
         rd_name = ""
 
-        if ns != "":
-            ns_name = str(ns)
-            rd_name = str(str(ns) + "/")
+        if name_space != "":
+            ns_name = str(name_space)
+            rd_name = str(str(name_space) + "/")
 
         return ns_name, rd_name
 
 
     def main_menu_func(self):
+        """main menu func"""
         try:
             control = True
 
@@ -125,21 +123,22 @@ class MoveitRokosPlanClass(object):
                     plan_value = input("Plan Numarasi Girin = ")
                     read_plan = self.read_plan_format_func(int(plan_value))
 
-                    print("\n\nRead plan = {0}\n\nPlan Type = {1}\n\n".format(read_plan, type(read_plan)))
+                    print(f"\n\nRead plan = {read_plan}\n\nPlan Type = {read_plan}\n\n")
 
                 elif menu_value == "6":
                     plan_value = input("Plan Numarasi Girin = ")
                     read_plan = self.read_plan_format_func(int(plan_value))
                     radian_list = read_plan.joint_trajectory.points[0].positions[-2:]
                     current_joint = self.group.get_current_joint_values()
-                    camera_control = self.camera_tolerance_control_func(current_joint, radian_list)
+                    camera_control = self.camera_tolerance_control_func(current_joint,
+                     radian_list)
 
                     if not camera_control:
                         self.dynamic_camera_move_joint_state_func(radian_list)
 
-                    print("\n\nRead Plan = {0}\n\nPlan Type = {1}\n\n".format(read_plan, type(read_plan)))
+                    print("\n\nRead Plan = {read_plan}\n\nPlan Type = {read_plan}\n\n")
                     success = self.plan_execution_func(read_plan)
-                    print("Success Mess = {}".format(success))
+                    print(f"Success Mess = {success}")
 
 
                 elif menu_value == "0":
@@ -149,13 +148,13 @@ class MoveitRokosPlanClass(object):
                     print("here")
                     continue
 
-                
-
         except Exception as err:
             print(err)
 
 
-    def dynamic_camera_move_joint_state_func(self, camera_position_list, tolerance=0.01, wait_value=True):
+    def dynamic_camera_move_joint_state_func(self, camera_position_list,
+     tolerance=0.01, wait_value=True):
+        """dynamic camera move joint state func"""
         try:
             group = self.group
 
@@ -171,30 +170,29 @@ class MoveitRokosPlanClass(object):
 
         except Exception as err:
             print(err)
+            return None
 
 
     @classmethod
-    def camera_tolerance_control_func(cls, current_robot_positions, position_list, tolerance=0.01):
+    def camera_tolerance_control_func(cls, current_robot_positions,
+     position_list, tolerance=0.01):
+
+        """camera tolerance control func"""
         try:
             cam_1_diff = abs(float(current_robot_positions[4] - position_list[0]))
             cam_2_diff = abs(float(current_robot_positions[5] - position_list[1]))
-            #print("_\n|\n+-->cam_1_diff = " + str(cam_1_diff))
-            #print("current_robot_positions = " + str(current_robot_positions[4]) + " -^.^- position_list = " + str(position_list[0]))
-            #print("_\n|\n+-->cam_2_diff = " + str(cam_2_diff))
-            #print("current_robot_positions = " + str(current_robot_positions[5]) + " -^.^- position_list = " + str(position_list[1]))
 
             if (cam_1_diff < tolerance) and (cam_2_diff < tolerance):
                 return True
-
-            else:
-                return False
+            return False
 
         except Exception as err:
             print(err)
+            return None
 
-
-
-    def menu_yazi(self):
+    @classmethod
+    def menu_yazi(cls):
+        """menu yazı fonk"""
         print(chr(27) + "[2J")
         print("+-------------------------------------------+")
         print("|  1-) Rokos Move                           |")
@@ -208,38 +206,29 @@ class MoveitRokosPlanClass(object):
         print("+-------------------------------------------+")
         print("|\n|")
 
-
     def camera_move_joint_state_func(self):
+        """Camera move joint state func"""
         try:
             camera_1_value = input("Camera 1 Orientation Degree Value = ")
             camera_2_value = input("Camera 2 Orientation Degree Value = ")
 
-            query_list =list(["", None, "None", "n", " "])
+            query_list = ["", None, "None", "n", " "]
 
             joint_goal = self.group.get_current_joint_values()
-            #print(joint_goal)
 
             if camera_1_value not in query_list:
                 camera_1_radian_value = math.radians(float(camera_1_value))
-                #print(camera_1_radian_value)
                 joint_goal[4] = camera_1_radian_value
-            """
-            joint_goal[4] = float(camera_1_value)
-            """
 
             if camera_2_value not in query_list:
                 camera_2_radian_value = math.radians(float(camera_2_value))
-                #print(camera_2_radian_value)
                 joint_goal[5] = camera_2_radian_value
 
-            """
-            joint_goal[5] = float(camera_2_value)
-            """
-
             self.group.set_planning_time(0.5)
-            print("\n\nPlanning Time 1 = {}\n\n".format(self.group.get_planning_time()))
+            planning_time = self.group.get_planning_time()
+            print(f"\n\nPlanning Time 1 = {planning_time}\n\n")
             self.group.go(joint_goal, wait=True)
-            print("\n\nPlanning Time 2 = {}\n\n".format(self.group.get_planning_time()))
+            print(f"\n\nPlanning Time 2 = {planning_time}\n\n")
             self.group.stop()
             current_joints = self.group.get_current_joint_values()
 
@@ -247,16 +236,18 @@ class MoveitRokosPlanClass(object):
 
         except Exception as err:
             print(err)
+            return None
 
 
     def rokos_move_position_plan_cartesian_path_func(self):
+        """rokos move position plan cartesian path func"""
         try:
             x_value = input("X Coordinate Value = ")
             y_value = input("Y Coordinate Value = ")
             z_value = input("Z Coordinate Value = ")
 
-            query_list =list(["", None, "None", "n", " "])
-            waypoints = list()
+            query_list = ["", None, "None", "n", " "]
+            waypoints = []
             wpose = self.group.get_current_pose().pose
 
             if x_value not in query_list:
@@ -285,6 +276,7 @@ class MoveitRokosPlanClass(object):
 
 
     def take_photo_service_func(self):
+        """Take photo service func"""
         try:
             current_time = self.datenow_func()
             #print(current_time)
@@ -294,14 +286,16 @@ class MoveitRokosPlanClass(object):
 
         except Exception as err:
             print(err)
+            return None
 
 
     def get_image_client_func(self, request):
+        """get image client func"""
         rospy.wait_for_service(str(self.service_name))
 
         try:
-            rokos_image_service = rospy.ServiceProxy(str(self.service_name), ImageService)
-            response = rokos_image_service.call(ImageServiceRequest(request))
+            rokos_image_service = rospy.ServiceProxy(str(self.service_name), srvt_srv.ImageService)
+            response = rokos_image_service.call(srvt_srv.ImageServiceRequest(request))
 
             get_response = str(response.response)
 
@@ -309,9 +303,11 @@ class MoveitRokosPlanClass(object):
 
         except rospy.ServiceException as err:
             print("Service call failed: " + str(err))
+            return None
 
 
     def plan_execution_func(self, plan):
+        """plan execution func"""
         try:
             group = self.group
 
@@ -322,84 +318,47 @@ class MoveitRokosPlanClass(object):
 
         except Exception as err:
             print(err)
+            return None
 
 
 
     def go_to_pose_goal_func(self, pose_goal):
+        """Go to pose goal func"""
         try:
             group = self.group
             group.set_planning_time(self.set_planning_time_value)
-            #print("\n\nPlanning Time = {}\n\n".format(group.get_planning_time()))
-
-            #result_0 = group.get_path_constraints()
-            #print("\n\nResult 0 = {result}".format(result=result_0))
-
-            #(_, get_current_plan_00, _, _) = group.plan()
             group.set_pose_target(pose_goal)
-            #(_, get_current_plan_0, _, _) = group.plan()
 
             (get_error_code_val, get_current_plan, get_planning_time, get_error_code) = group.plan()
-            print("\n\n\nIn Function 1\n-> Get Error Code Value = {0}\n-> Get Planning Time = {1}\n-> Get Error Code = {2}\n\n".format(get_error_code_val, get_planning_time, get_error_code))
+            print(f"\n\n\nIn Function 1\n-> Get Error Code Value = {get_error_code_val}\n-> \
+                Get Planning Time = {get_planning_time}\n-> Get Error Code = \
+                    {get_error_code}\n\n")
 
+            group.go(wait=True)
 
-
-            #print("\n\nPlanning Time 1 = {}\n\n".format(group.get_planning_time()))
-            plan_exec = group.go(wait=True)
-
-            #(get_plan_control, get_current_plan, get_planning_time, get_error_code) = group.plan()
-            #print("\n\nPlan = {plan}\nPlanning Time = {p_time:15f}\n\n".format(plan=get_current_plan, p_time=get_planning_time))
-            #print("\nPlanning Time = {p_time:15f}\n".format(p_time=get_planning_time))
-
-            #print("\n\nPlan Type = {}".format(type(get_current_plan)))
-
-            #temp_dict = {"Plan": str(get_current_plan)}
-            #temp_dict = get_current_plan
-            #len_points_0 = len(get_current_plan_0.joint_trajectory.points)
-            #print("\n\nPlan Points = {0}\n\n\nPlan Counts = {1}\n".format(get_current_plan_0.joint_trajectory.points, len_points_0))
-
-            #len_points = len(get_current_plan.joint_trajectory.points)
-            #print("\n\nPlan Points = {0}\n\n\nPlan Counts = {1}\n".format(get_current_plan.joint_trajectory.points, len_points))
-            #self.save_plan_func(get_current_plan.joint_trajectory.points)
-            #print("\n\nPlanning Time 2 = {}\n\n".format(group.get_planning_time()))
-
-            #(get_error_code_val_1, get_current_plan_1, get_planning_time_1, get_error_code_1) = group.plan()
-            #print("\n\n\nIn Function 2\n-> Get Error Code Value = {0}\n-> Get Planning Time = {1}\n-> Get Error Code = {2}\n\n".format(get_error_code_val_1, get_planning_time_1, get_error_code_1))
             group.stop()
 
-            (get_error_code_val_2, get_current_plan_2, get_planning_time_2, get_error_code_2) = group.plan()
-            print("\n\n\nIn Function 3\n-> Get Error Code Value = {0}\n-> Get Planning Time = {1}\n-> Get Error Code = {2}\n\n".format(get_error_code_val_2, get_planning_time_2, get_error_code_2))
+            (get_error_code_val_2, get_current_plan_2, get_planning_time_2,
+             get_error_code_2) = group.plan()
+            print(f"\n\n\nIn Function 3\n-> Get Error Code Value = {get_error_code_val_2}\n-> \
+                Get Planning Time = {get_planning_time_2}\n-> Get Error Code = \
+                    {get_error_code_2}\n\n")
             group.clear_pose_targets()
-            
-            #len_points_00 = len(get_current_plan_0.joint_trajectory.points)
-            #print("\n\n0 -->Plan Points = {0}\n\n\nPlan Counts = {1}\n".format(get_current_plan_00.joint_trajectory.points, len_points_00))
 
-            #len_points_0 = len(get_current_plan_0.joint_trajectory.points)
-            #print("\n\n1 -->Plan Points = {0}\n\n\nPlan Counts = {1}\n".format(get_current_plan_0.joint_trajectory.points, len_points_0))
-            #temp_plan = get_current_plan.joint_trajectory.points[0].positions
-            #len_points = len(get_current_plan.joint_trajectory.points)
-            #print("\n\n-->Plan Points = {0}\nPlan Type = {1}\nPlan Counts = {2}".format(get_current_plan.joint_trajectory.points, type(get_current_plan), len_points))
-            ##self.save_plan_func(get_current_plan.joint_trajectory.points)
-            #self.save_plan_func(get_current_plan)
-            #print("\n\nPlanning Time 3 = {}\n\n".format(group.get_planning_time()))
-
-
-
-
-            #(get_error_code_val_1, get_current_plan_1, get_planning_time_1, get_error_code_1) = group.plan()
-            #print("\n\n\nIn Function 2\n-> Get Error Code Value = {0}\n-> Get Planning Time = {1}\n-> Get Error Code = {2}\n\n".format(get_error_code_val_1, get_planning_time_1, get_error_code_1))
-
-            print("\n\nPlanning Time = {}\n\n".format(group.get_planning_time()))
+            planning_time = group.get_planning_time()
+            print(f"\n\nPlanning Time = {planning_time}\n\n")
 
             current_pose = self.group.get_current_pose().pose
-            #current_pose = self.group.get_current_pose()
 
             return all_close(pose_goal, current_pose, 0.01), get_current_plan     #0.005     # 0.01
 
         except Exception as err:
             print(err)
+            return None
 
 
     def dynamic_go_to_pose_goal(self):
+        """Dynamic go to pose goal"""
         try:
             print("\n\n\n")
             x_value = input("X Coordinate Value = ")
@@ -407,23 +366,18 @@ class MoveitRokosPlanClass(object):
             z_value = input("Z Coordinate Value = ")
 
             set_planning_time = input("Get Planning Time = ")
-            query_list =list(["", None, "None", "n", " "])
-            
+            query_list = ["", None, "None", "n", " "]
+
             pose_goal = self.group.get_current_pose().pose
 
-            """
             #pose_goal = geometry_msgs.msg.PoseStamped()
-            current_pose = self.group.get_current_pose()
-            pose_goal.header = current_pose.header
-            pose_goal.pose.orientation.x = current_pose.pose.orientation.x
-            pose_goal.pose.orientation.y = current_pose.pose.orientation.y
-            pose_goal.pose.orientation.z = current_pose.pose.orientation.z
-            pose_goal.pose.orientation.w = current_pose.pose.orientation.w
-            pose_goal.pose
-            """
-
-            #get_effector_link = self.group.get_end_effector_link()
-            #print("\n\nEffector_link = {}".format(get_effector_link))
+            #current_pose = self.group.get_current_pose()
+            #pose_goal.header = current_pose.header
+            #pose_goal.pose.orientation.x = current_pose.pose.orientation.x
+            #pose_goal.pose.orientation.y = current_pose.pose.orientation.y
+            #pose_goal.pose.orientation.z = current_pose.pose.orientation.z
+            #pose_goal.pose.orientation.w = current_pose.pose.orientation.w
+            #pose_goal.pose
 
             if x_value not in query_list:
                 pose_goal.position.x = float(x_value)
@@ -433,56 +387,47 @@ class MoveitRokosPlanClass(object):
 
             if z_value not in query_list:
                 pose_goal.position.z = float(z_value)
-            
+
             try:
                 if set_planning_time not in query_list:
                     self.set_planning_time_value = float(set_planning_time)
 
                 else:
                     self.set_planning_time_value = 5.0
-
-            except:
+            except Exception as err:
+                print(err)
                 self.set_planning_time_value = 5.0
 
-            """
-            if x_value not in query_list:
-                pose_goal.pose.position.x = float(x_value)
-            else:
-                pose_goal.pose.position.x = current_pose.pose.position.x
-
-            if y_value not in query_list:
-                pose_goal.pose.position.y = float(y_value)
-            else:
-                pose_goal.pose.position.y = current_pose.pose.position.y
-
-            if z_value not in query_list:
-                pose_goal.pose.position.z = float(z_value)
-            else:
-                pose_goal.pose.position.z = current_pose.pose.position.z
-            """
+            #if x_value not in query_list:
+            #    pose_goal.pose.position.x = float(x_value)
+            #else:
+            #    pose_goal.pose.position.x = current_pose.pose.position.x
+            #if y_value not in query_list:
+            #    pose_goal.pose.position.y = float(y_value)
+            #else:
+            #    pose_goal.pose.position.y = current_pose.pose.position.y
+            #if z_value not in query_list:
+            #    pose_goal.pose.position.z = float(z_value)
+            #else:
+            #    pose_goal.pose.position.z = current_pose.pose.position.z
 
             result, get_current_plan = self.go_to_pose_goal_func(pose_goal)
 
-            #len_points = len(get_current_plan.joint_trajectory.points)
-            #print("\n\n-->Plan Points = {0}\nPlan Type = {1}\nPlan Counts = {2}".format(get_current_plan.joint_trajectory.points, type(get_current_plan), len_points))
-            
             print("\n\n\n")
             plan_saving = input("Plan Saving = ")
 
             if str(plan_saving) == "x" or str(plan_saving) == "X":
-                self.save_plan_func(get_current_plan) 
+                self.save_plan_func(get_current_plan)
 
+            print(f"\n\nDynamic Go to Pose Result, {result}")
 
-            print("\n\nDynamic Go to Pose Result, {r}".format(r=result))
-
-            #result_constraints = self.group.get_path_constraints()
-            #print("\n\nResult Constraints = {result}".format(result=result_constraints))
 
         except Exception as err:
             print(err)
 
 
     def dynamic_position_plan_cartesian_path(self):
+        """Dynamic position plan cartesian path"""
         try:
             group = self.group
             control = True
@@ -492,8 +437,8 @@ class MoveitRokosPlanClass(object):
                 y_value = input("Y Coordinate Value = ")
                 z_value = input("Z Coordinate Value = ")
 
-                query_list =list(["", None, "None", "n", " "])
-                waypoints = list()
+                query_list = ["", None, "None", "n", " "]
+                waypoints = []
                 wpose = group.get_current_pose().pose
 
                 if x_value not in query_list:
@@ -512,9 +457,6 @@ class MoveitRokosPlanClass(object):
                                                 0.01,           # eef_step
                                                 0.0)            # jump_threshold
 
-                #print(plan)
-
-                #self.log_class.main_func(plan)
                 group.execute(plan, wait=True)
 
         except Exception as err:
@@ -522,7 +464,8 @@ class MoveitRokosPlanClass(object):
 
     @classmethod
     def convert_degrees_to_radians(cls, degrees_list):
-        radians_list = list()
+        """Convert degress2radians"""
+        radians_list = []
 
         for item in degrees_list:
             value = math.radians(item)
@@ -532,6 +475,7 @@ class MoveitRokosPlanClass(object):
 
 
     def save_plan_func(self, current_plan):
+        """Save plan func"""
         try:
             #self.write_plan_yaml_format_func(current_plan)
             self.write_plan_format_func(current_plan, self.plan_file_counter)
@@ -542,33 +486,38 @@ class MoveitRokosPlanClass(object):
 
 
     def write_plan_yaml_format_func(self, write_data):
+        """Write plan yaml format func"""
         new_file_name = "Deneme_plan_log"
         current_workspace = self.get_current_workspace()
 
-        full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' + str(new_file_name) + '.yaml')
+        full_file_name = (str(current_workspace) + '/srvt_moveit/plan_file/' +\
+             str(new_file_name) + '.yaml')
 
         with open(str(full_file_name), 'wb') as outfile:
             yaml.dump(write_data, outfile, default_flow_style=False)
 
 
     def read_plan_yaml_format_func(self):
+        """read plan yaml format func"""
         new_file_name = "Deneme_plan_log"
         current_workspace = self.get_current_workspace()
 
-        full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' + str(new_file_name) + '.yaml')
+        full_file_name = (str(current_workspace) + '/srvt_moveit/plan_file/' +\
+             str(new_file_name) + '.yaml')
 
         with open(str(full_file_name), 'rb') as load_file:
             read_yaml = yaml.safe_load(load_file)
-
 
         return read_yaml
 
 
     def write_plan_format_func(self, write_data, file_counter):
+        """Write plan format func"""
         new_file_name = str("Deneme_plan_log_v_" + str(file_counter))
         current_workspace = self.get_current_workspace()
 
-        full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' + new_file_name + '.dat')
+        full_file_name = (str(current_workspace) + '/srvt_moveit/plan_file/' +\
+             new_file_name + '.dat')
 
         with open(str(full_file_name), 'wb') as outfile:
             pickle.dump(write_data, outfile, pickle.HIGHEST_PROTOCOL)
@@ -577,46 +526,41 @@ class MoveitRokosPlanClass(object):
 
 
     def read_plan_format_func(self, file_counter):
+        """read plan format func"""
         new_file_name = str("Deneme_plan_log_v_" + str(file_counter))
         current_workspace = self.get_current_workspace()
 
-        full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' + str(new_file_name) + '.dat')
+        full_file_name = (str(current_workspace) + '/srvt_moveit/plan_file/' +\
+             str(new_file_name) + '.dat')
 
         with open(str(full_file_name), 'rb') as load_file:
             read_yaml = pickle.load(load_file)
 
         return read_yaml
 
-    """
-    def write_plan_format_func(self, write_data):
-        new_file_name = "Deneme_plan_log"
-        current_workspace = self.get_current_workspace()
+    ##def write_plan_format_func(self, write_data):
+    ##    new_file_name = "Deneme_plan_log"
+    ##    current_workspace = self.get_current_workspace()
+    ##    full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' +\
+    #  str(new_file_name) + '.txt')
+    ##    with open(str(full_file_name), 'wb') as outfile:
+    ##        outfile.write(write_data)
+    ##    outfile.close()
 
-        full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' + str(new_file_name) + '.txt')
-
-        with open(str(full_file_name), 'wb') as outfile:
-            outfile.write(write_data)
-
-        outfile.close()
-
-
-    def read_plan_format_func(self):
-        new_file_name = "Deneme_plan_log"
-        current_workspace = self.get_current_workspace()
-
-        full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' + str(new_file_name) + '.yaml')
-
-        with open(str(full_file_name), 'rb') as load_file:
-            read_yaml = load_file.read()
-
-        #load_file = file(str(full_file_name), 'r')
-        #temp_dict = yaml.load(load_file)
-
-        return read_yaml
-    """
+    ##def read_plan_format_func(self):
+    ##    new_file_name = "Deneme_plan_log"
+    ##    current_workspace = self.get_current_workspace()
+    ##    full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' +\
+    #  str(new_file_name) + '.yaml')
+    ##    with open(str(full_file_name), 'rb') as load_file:
+    ##        read_yaml = load_file.read()
+    ##    #load_file = file(str(full_file_name), 'r')
+    ##    #temp_dict = yaml.load(load_file)
+    ##    return read_yaml
 
     @classmethod
-    def get_current_workspace(cls):
+    def  get_current_workspace(cls):
+        """get current workspace"""
         file_full_path = os.path.dirname(os.path.realpath(__file__))
         directory_name = sys.argv[0].split('/')[-3]
         workspace_name = file_full_path.split(str(directory_name))[0]
@@ -625,6 +569,7 @@ class MoveitRokosPlanClass(object):
 
     @classmethod
     def datenow_func(cls):
+        """datenow func"""
         now = datetime.now()
         dt_string = now.strftime("%Y_%m_%d_-_%H_%M_%S")
 
@@ -632,27 +577,29 @@ class MoveitRokosPlanClass(object):
 
 
     def new_box(self):
+        """Test box func"""
         name = "Test_Box"
         box_pose_x = float(-5.0 * float(3.0 * self.box_counter))
         pose = [box_pose_x, -2.0, 1.0, 1.0]
         dimensions = [2.5, 2.5, 2.5]
-        
 
-        p = geometry_msgs.msg.PoseStamped()
-        p.header.frame_id = self.robot.get_planning_frame()
-        p.header.stamp = rospy.Time.now()
-        
-        p.pose.position.x = pose[0]
-        p.pose.position.y = pose[1]
-        p.pose.position.z = pose[2]
 
-        p.pose.orientation.w = pose[3]
+        pose_coor = geometry_msgs.msg.PoseStamped()
+        pose_coor.header.frame_id = self.robot.get_planning_frame()
+        pose_coor.header.stamp = rospy.Time.now()
+        pose_coor.pose.position.x = pose[0]
+        pose_coor.pose.position.y = pose[1]
+        pose_coor.pose.position.z = pose[2]
 
-        self.scene.add_box(name, p, (dimensions[0], dimensions[1], dimensions[2]))
+        pose_coor.pose.orientation.w = pose[3]
+
+        self.scene.add_box(name, pose_coor, (dimensions[0], dimensions[1], dimensions[2]))
         self.box_counter += 1
 
 
     def add_mesh_func(self):
+        """Scene çıkarılacağı zaman ilgili mesh dosyasının eklenmesini sağlayan
+        fonksiyondur, kod çalıştırıldığında 4 seçeneği ile ulaşılır."""
 
         file_name = "/home/ros/Desktop/VALU3S/Otokar/deneme3.stl"
         name = "Otokar_Sase"
@@ -665,40 +612,41 @@ class MoveitRokosPlanClass(object):
         #pose = [-1.86, 3.165, 2.3]
         #dimensions = [0.5, 0.5, 0.5]
 
-        p = geometry_msgs.msg.PoseStamped()
-        p.header.frame_id = self.robot.get_planning_frame()
-        p.header.stamp = rospy.Time.now()
+        pose_coor = geometry_msgs.msg.PoseStamped()
+        pose_coor.header.frame_id = self.robot.get_planning_frame()
+        pose_coor.header.stamp = rospy.Time.now()
 
-        p.pose.position.x = pose[0]
-        p.pose.position.y = pose[1]
-        p.pose.position.z = pose[2]
+        pose_coor.pose.position.x = pose[0]
+        pose_coor.pose.position.y = pose[1]
+        pose_coor.pose.position.z = pose[2]
 
-        p.pose.orientation.w = 1.0
+        pose_coor.pose.orientation.w = 1.0
 
-        self.scene.add_mesh(name, p, file_name, (dimensions[0], dimensions[1], dimensions[2]))
+        self.scene.add_mesh(name, pose_coor, file_name,
+         (dimensions[0], dimensions[1], dimensions[2]))
 
 
     def add_box(self, timeout=4):
-        box_name = "Box_Name"
+        """Add box func"""
+        self.box_name = "Box_Name"
         scene = self.scene
-        
+
         box_pose = geometry_msgs.msg.PoseStamped()
         box_pose.header.frame_id = self.robot.get_planning_frame()
         box_pose.pose.orientation.w = 1.0
         box_pose.pose.position.x = 0.0
         box_pose.pose.position.y = -3.0
         box_pose.pose.position.z = 1.0
-        box_name = "box"
-        scene.add_box(box_name, box_pose, size=(2.5, 2.5, 2.5))
+        self.box_name = "box"
+        scene.add_box(self.box_name, box_pose, size=(2.5, 2.5, 2.5))
 
-        self.box_name=box_name
         return self.wait_for_state_update(box_is_known=True, timeout=timeout)
 
 
     def wait_for_state_update(self, box_is_known=False, box_is_attached=False, timeout=4):
-        # Copy class variables to local variables to make the web tutorials more clear.
-        # In practice, you should use the class variables directly unless you have a good
-        # reason not to.
+        """Copy class variables to local variables to make the web tutorials more clear.
+        In practice, you should use the class variables directly unless you have a good
+        reason not to."""
         box_name = self.box_name
         scene = self.scene
 
@@ -747,8 +695,8 @@ class MoveitRokosPlanClass(object):
 
 
 #----------------------------------------------------------------------------
-
 def get_current_workspace():
+    """Get current workspace (class dışında ve içinde kullanılmış)"""
     file_full_path = os.path.dirname(os.path.realpath(__file__))
     directory_name = sys.argv[0].split('/')[-3]
     workspace_name = file_full_path.split(str(directory_name))[0]
@@ -757,10 +705,12 @@ def get_current_workspace():
 
 
 def read_plan_format_func():
+    """read plan format func"""
     new_file_name = "Deneme_plan_log"
     current_workspace = get_current_workspace()
 
-    full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' + str(new_file_name) + '.dat')
+    full_file_name = (str(current_workspace) + 'srvt_moveit/plan_file/' +\
+         str(new_file_name) + '.dat')
 
     with open(str(full_file_name), 'rb') as load_file:
         read_yaml = pickle.load(load_file)
@@ -768,94 +718,73 @@ def read_plan_format_func():
     return read_yaml
 
 def test_func():
+    """test func"""
     temp_list = [[0,1,2,3,4,5], [3,4,5,6,7,8]]
 
     radian_list = temp_list[0][-2:]
 
-    print("Radian list = {}".format(radian_list))
+    print("Radian list = " + radian_list)
 
     #read_plan = read_plan_format_func()
     #len_points = len(read_plan.joint_trajectory.points)
-#
-    #print("\n\nRead plan = {0}\n\nPlan type = {1}\nPlan Count = {2}".format(read_plan, type(read_plan), len_points))
-
-
-#----------------------------------------------------------------------------
+    #print("\n\nRead plan = {0}\n\nPlan type = {1}\nPlan Count = "+\
+    # "{2}".format(read_plan, type(read_plan), len_points))
 
 def all_close(goal, actual, tolerance):
+    """all close func"""
     try:
-        all_equal = True
-
-        if type(goal) is list:
-            for index in range(len(goal)):
+        if isinstance(goal,list):
+            for index, num in enumerate(goal):
                 if abs(actual[index] - goal[index]) > tolerance:
                     return False
 
-        elif type(goal) is geometry_msgs.msg.PoseStamped:
+        elif isinstance(goal, geometry_msgs.msg.PoseStamped):
             return all_close(goal.pose, actual.pose, tolerance)
 
-        elif type(goal) is geometry_msgs.msg.Pose:
+        elif isinstance(goal, geometry_msgs.msg.Pose):
             return all_close(pose_to_list(goal), pose_to_list(actual), tolerance)
 
         return True
 
     except Exception as err:
         print(err)
+        return None
 
 
-def main_func(param=""):
+def main_func(par_val):
+    """Main func"""
     try:
-        if param == "":
-            #param = "left"
-            param = "right"
+        if par_val is None:
+            #par_val = "left"
+            par_val = "right"
 
-        g_name = str("rokos_" + str(param) + "_arm")
-        ns_name = str(str(param) + "_rokos")
+        g_name = str("rokos_" + str(par_val) + "_arm")
+        ns_name = str(str(par_val) + "_rokos")
 
-        moveit_class = MoveitRokosPlanClass(g_name, ns_name)
+        moveit_class = MovePlanController(g_name, ns_name)
 
         print("Start Cartesian Plan Use Case")
         print("\n\n")
 
         moveit_class.main_menu_func()
-        
-
         #moveit_class.camera_move_joint_state_func()
 
-
-        """
         # Sadece XYZ icin
-        moveit_class.dynamic_position_plan_cartesian_path()
-        """
+        #moveit_class.dynamic_position_plan_cartesian_path()
 
         print("\n\n")
-        
-
         print("Finish cartesian plan")
 
-    except rospy.ROSInterruptException as err:
-        print("Error: " + str(err))
-        return
-    except KeyboardInterrupt as err:
-        print("Error: " + str(err))
-        return
     except Exception as err:
         print("Error: " + str(err))
-        return
 
 
 if __name__ == '__main__':
     rospy.init_node('move_plan_node', anonymous=True)
-    param = ""
-
+    #par_val = ""
     # Default Right, Left icin consoleda left yazmak gerekiyor.
     if len(sys.argv) > 1:
-        param = sys.argv[1]
-
-    #param = "right"
-
-
-    main_func(param)
-
-
+        rokos_arm = sys.argv[1]
+    #par_val = "right"
+    main_func(rokos_arm)
     #test_func()
