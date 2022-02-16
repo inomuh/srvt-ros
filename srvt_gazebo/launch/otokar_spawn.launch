@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="robot_name" default="sag" />
+  <arg name="robot_name" default="rokos" />
   <arg name="robot_position" default="-x 0.0 -y 0.0 -z 0.0" /> 
-  <arg name="otokar_des" default="$(find rokos_description)/urdf/otokarv3.urdf" />
+  <arg name="otokar_des" default="$(find rokos_description)/urdf/otokar.urdf" />
    
   <group ns="$(arg robot_name)">
     <param name="robot_description" textfile="$(arg otokar_des)"/>
@@ -16,7 +16,7 @@
       <param name="publish_frequency" type="double" value="50.0" />
       <param name="tf_prefix" type="string" value="$(arg robot_name)" />
     </node>
-    <rosparam file="$(find rokos_description)/params/arm_controller_ur10_custom.yaml" ns="otokar" command="load"/>
+    <rosparam file="$(find rokos_description)/params/arm_controller_ur10_custom.yaml" ns="rokos" command="load"/>
     <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager"
         args="spawn otokar/rokos" respawn="false" output="screen"/>
     <rosparam file="$(find rokos_description)/params/joint_state_controller.yaml" command="load" />

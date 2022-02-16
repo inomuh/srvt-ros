@@ -4,16 +4,16 @@
   <include file="$(find srvt_gazebo)/launch/empty.launch" />
 <!-- 
    <include file="$(find srvt_gazebo)/launch/otokar_spawn.launch">
-     <arg name="robot_name" value="/sol" />
+     <arg name="robot_name" value="/left_rokos" />
      <arg name="robot_position" value="-x 7.94 -y -5.04 -z 0.0 -R 0 -P 0 -Y 0" />
-     <arg name="otokar_des" default="$(find rokos_description)/urdf/sol_rokos.urdf" /> 
+     <arg name="otokar_des" default="$(find rokos_description)/urdf/left_rokos.urdf" /> 
    </include>
 
 
    <include file="$(find srvt_gazebo)/launch/otokar_spawn.launch">
-     <arg name="robot_name" value="/sag" />
+     <arg name="robot_name" value="/right_rokos" />
      <arg name="robot_position" value="-x 7.94 -y 1.28 -z 0.0 -R 0 -P 0 -Y 0.0" />
-     <arg name="otokar_des" default="$(find rokos_description)/urdf/sag_rokos.urdf" /> 
+     <arg name="otokar_des" default="$(find rokos_description)/urdf/right_rokos.urdf" /> 
    </include>
  -->
 </launch>
