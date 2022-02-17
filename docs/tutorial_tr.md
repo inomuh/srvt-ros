@@ -28,12 +28,12 @@ cd ~/catkin_ws && catkin_make && catkin_make install
 
 ### ROKOS Model Dosyalarının Düzenlenmesi
 
-- "model" dosyasındaki modelleri, ".gazebo/models" klasörünün içerisine ve "otokar_simulation" klasörüne çıkartın.
+- Kullanılacak robotun "model" dosyasını, ".gazebo/models" klasörünün içerisine ve "srvt_ros" klasörüne çıkartın.
 
   ##### NOT: Eğer daha önce gazebo çalıştırılmadıysa .gazebo dosyasının oluşması için terminalden "gazebo" komutu yazılarak gazebo çalıştırılmalıdır.
   ##### NOT2: "models" klasörü yoksa oluşturulmalıdır.
 
-- "rokos_description" dosyasını SRVT-git reposundan indirilen "srvt_ros" içerisine atın.
+- Robot modelinin "meshes" klasörünü, "srvt_description" klasörünün içerisine atın.
 
 - modellerin çalışması için ~/.bashrc dosya içeriği düzenlemelerini yapın.
 
