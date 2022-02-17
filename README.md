@@ -1,91 +1,57 @@
+# Simulation-based Robot Verification Testing Tool (SRVT)
 
-## SRVT-ROS Kurulum&Kullanım Rehberi ##
+SRVT can be thought of as a toolkit or advanced method that allows a robotic system to be imported into a simulation environment and applied to validation tests. The basis of the system is the coordinated use of some critical software for the ROS ecosystem. Simulation environment using Gazebo, trajectory planning using Moveit, mission communication and dynamic verification system using ROS Smach package were built in a single ROS package. For more information about the purpose of this tool: https://dergipark.org.tr/en/pub/jster/issue/61588/979689
 
-### SRVT'nin çalıştırılabilmesi için yapılması gereken kurulumlar:
-------------------------------------------------------------------
+### Tool Environment Setup
 
-- ROS Noetic kurulumu için: 
+- For English documentation: [Eng]()
+- For Turkish documentation: [Tur]()
 
-```bash
-http://wiki.ros.org/noetic/Installation/Ubuntu
-```
+Changelog:
+----------
+v1.0 - 17.02.22
+----------------------
+- First Commit
 
-- ROS bağımlılıklarının kurulumları için aşağıdaki komut çalıştırılmalıdır:
+### Credits
 
-```bash
-sudo apt-get install ros-noetic-moveit && sudo apt-get install ros-noetic-controller-manager && sudo apt-get install ros-noetic-joint-trajectory-controller && sudo apt-get install ros-noetic-rqt-joint-trajectory-controller && sudo apt-get install ros-noetic-effort-controllers
-```
-- Daha sonra rosdep komutları çalıştırılmalıdır.
+<a href="http://valu3s.eu">
+  <img align=left img src="https://upload.wikimedia.org/wikipedia/tr/d/d0/TUBITAK-Logo.jpg" 
+       alt="tübitak_logo" height="100" >
+</a>
 
-```bash
-sudo rosdep init && rosdep update
-```
-- Son olarak "srvt_ros" paketi, ROS çalışma alanına atılmalı ve derlenmelidir.
+---
 
-```bash
-cd ~/catkin_ws && catkin_make && catkin_make install
-```
+This work is supported by [TÜBİTAK](https://www.tubitak.gov.tr/) Project under grant number 120N803 which conducted by the İnovasyon Mühendislik.
 
-### ROKOS Model Dosyalarının Düzenlenmesi
+---
 
-- "model" dosyasındaki modelleri, ".gazebo/models" klasörünün içerisine ve "otokar_simulation" klasörüne çıkartın.
+<a href="http://valu3s.eu">
+  <img align=right img src="https://valu3s.eu/wp-content/uploads/2020/04/VALU3S_green_transparent-1024x576.png" 
+       alt="valu3s_logo" height="100" >
+</a>
 
-  ##### NOT: Eğer daha önce gazebo çalıştırılmadıysa .gazebo dosyasının oluşması için terminalden "gazebo" komutu yazılarak gazebo çalıştırılmalıdır.
-  ##### NOT2: "models" klasörü yoksa oluşturulmalıdır.
+  This work is also done by [Inovasyon Muhendislik](https://www.inovasyonmuhendislik.com/) and [ESOGU-SRLAB](https://srlab.ogu.edu.tr/) under [VALU3S](https://valu3s.eu) project. This project has received funding from the [ECSEL](https://www.ecsel.eu) Joint Undertaking (JU) under grant agreement No 876852. The JU receives support from the European Union’s Horizon 2020 research and innovation programme and Austria, Czech Republic, Germany, Ireland, Italy, Portugal, Spain, Sweden, Turkey.
 
-- "rokos_description" dosyasını SRVT-git reposundan indirilen "srvt_ros" içerisine atın.
+## Cite
 
-- modellerin çalışması için ~/.bashrc dosya içeriği düzenlemelerini yapın.
+If the code or data help you, please cite the following the paper.
 
-### ~/.bashrc Dosyası İçeriği Düzenlemeler ###
+ 	@research article{jster979689, 
+    journal = {Journal of Science, Technology and Engineering Research},
+    issn = {}, 
+    eissn = {2717-8404},
+    address = {Eymir mah. Tek küme evleri, No.59/6 Gölbaşı-ANKARA},
+    publisher = {Mehmet BULUT},
+    year = {2021},
+    volume = {2},
+    pages = {31 - 45},
+    doi = {10.53525/jster.979689},
+    title = {Endüstriyel Robot Hareket Planlama Algoritmaları Performans Karşılaştırması},
+    key = {cite},
+    author = {Erdoğmuş, Alim} }
 
-- Aşağıdaki komutların ~/.bashrc dosyasına eklenmesi gerekir.
+### License
 
-```bash
-source /opt/ros/noetic/setup.bash
-source ~/catkin_ws/devel/setup.bash
-source /usr/share/gazebo-11/setup.sh
-export GAZEBO_MODEL_PATH=~/catkin_ws/src/srvt_ros/model/:$GAZEBO_MODEL_PATH
-```
-
-### SRVT'nin Kullanım Kodları
- 
-- SRVT'nin çalıştırılması için sırasıyla ve ayrı terminallerde aşağıdaki komutlar çalıştırılmalıdır.
-
-SRVT Gazebo'yu çalıştırmak için:
-
-```bash
-roslaunch srvt_moveit start_system.launch
-```
-
-SRVT Image Server düğümünü çalıştırmak için:
-
-```bash
-rosrun srvt_moveit image_service_node.py
-```
-
-SRVT Moveit'i çalıştırmak için:
-
-```bash
-roslaunch srvt_moveit start_moveit.launch
-```
-
-SRVT Task Service'i çalıştırmak için:
-
-```bash
-roslaunch srvt_moveit start_rokos_task_service.launch
-```
-
-SRVT Smach düğümünü çalıştırmak için:
-
-```bash	
-roslaunch srvt_moveit start_rokos_smach.launch
-```
-
-ROKOS kollarını RVİZ'den görüntülemek için:
-
-```bash	
-cd ~/catkin_ws/src/srvt_ros/srvt_rviz
-rosrun rviz rviz -d left_rokos_rviz.rviz (ya da right_rokos_rviz.rviz)
-```
-
+See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache-2.0 Licence).
+  
