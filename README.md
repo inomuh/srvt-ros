@@ -4,8 +4,8 @@ SRVT can be thought of as a toolkit or advanced method that allows a robotic sys
 
 ### Tool Environment Setup
 
-- For English documentation: [Eng](https://github.com/Akerdogmus/srvt-ros/blob/main/docs/tutorial_en.md)
-- For Turkish documentation: [Tur](https://github.com/Akerdogmus/srvt-ros/blob/main/docs/tutorial_tr.md)
+- For English documentation: [Eng](https://github.com/inomuh/srvt-ros/blob/main/docs/tutorial_en.md)
+- For Turkish documentation: [Tur](https://github.com/inomuh/srvt-ros/blob/main/docs/tutorial_tr.md)
 
 Changelog:
 ----------
