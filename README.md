@@ -3,6 +3,8 @@
 
 SRVT can be thought of as a toolkit or advanced method that allows a robotic system to be imported into a simulation environment and applied to validation tests. The basis of the system is the coordinated use of some critical software for the ROS ecosystem. Simulation environment using Gazebo, trajectory planning using Moveit, mission communication and dynamic verification system using ROS Smach package were built in a single ROS package. For more information about the purpose of this tool: https://dergipark.org.tr/en/pub/jster/issue/61588/979689
 
+#### Note: This tool does not include the robot model files, you can access the model addition details from the "Tool Environment Setup" section below.
+
 ### Tool Environment Setup
 
 - For English documentation: [Eng](https://github.com/inomuh/srvt-ros/blob/main/docs/tutorial_en.md)
