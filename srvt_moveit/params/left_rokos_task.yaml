@@ -3107,7 +3107,6 @@ Left_Rokos:
         C_AX: 4
         C_AZ: 5
 
-       
   - Task:
       Task_ID: 35862
 
@@ -3130,7 +3129,7 @@ Left_Rokos:
         Z: 2
         C_AX: 4
         C_AZ: 5
-        
+
   - Task:
       Task_ID: 35863
 
@@ -3153,7 +3152,7 @@ Left_Rokos:
         Z: 4
         C_AX: 1
         C_AZ: 2
-        
+
   - Task:
       Task_ID: 35864
 
@@ -3176,7 +3175,7 @@ Left_Rokos:
         Z: 2
         C_AX: 4
         C_AZ: 5
-        
+
   - Task:
       Task_ID: 35865
 
@@ -3199,7 +3198,7 @@ Left_Rokos:
         Z: 4
         C_AX: 1
         C_AZ: 2
-        
+
   - Task:
       Task_ID: 35866
 
@@ -3314,7 +3313,6 @@ Left_Rokos:
         Z: 2
         C_AX: 4
         C_AZ: 5
-
 
   - Task:
       Task_ID: 35875
@@ -3499,4 +3497,3 @@ Left_Rokos:
         Z: 2
         C_AX: 4
         C_AZ: 5
-
