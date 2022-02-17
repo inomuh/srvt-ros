@@ -14,12 +14,12 @@ joint_limits:
     max_acceleration: 1.744
   cam2_actuator_joint:
     has_velocity_limits: true
-    max_velocity: 2.16 #4.36 
+    max_velocity: 2.16 #4.36
     has_acceleration_limits: false
     max_acceleration: 1.744
   linear_x_actuator_joint:
     has_velocity_limits: true
-    max_velocity: 0.6899999999999 
+    max_velocity: 0.6899999999999
     has_acceleration_limits: true
     max_acceleration: 0.275
   linear_y1_actuator_joint:
