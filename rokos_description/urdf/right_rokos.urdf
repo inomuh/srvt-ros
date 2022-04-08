@@ -1,4 +1,4 @@
-<robot name="rokos">
+<robot name="right_rokos">
   <link name="world" />
 
   <link name="linear_x_link">
