@@ -9,7 +9,7 @@
   <param if="$(arg load_robot_description)" name="$(arg robot_description)" textfile="$(find rokos_description)/urdf/right_rokos.urdf"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <param name="$(arg robot_description)_semantic" textfile="$(find right_rokos_moveit_config)/config/rokos.srdf" />
+  <param name="$(arg robot_description)_semantic" textfile="$(find right_rokos_moveit_config)/config/right_rokos.srdf" />
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">
