@@ -10,7 +10,7 @@
     <arg name="scene_filename" value="right_rokos_scene.scene"/>
 
   </include>
- <!--
+  
   <include file="$(find srvt_moveit)/launch/rokos_planning_execution.launch">
 
     <arg name="robot_name" value="/left_rokos"/>
@@ -20,5 +20,4 @@
     <arg name="scene_filename" value="left_rokos_scene.scene"/>
 
   </include>
--->
 </launch>
