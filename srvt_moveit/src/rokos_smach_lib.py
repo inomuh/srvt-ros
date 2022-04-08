@@ -525,7 +525,8 @@ class RokosTakePhotoState(smach.State):
                      str(get_current_info[1]) + "_vehicle_" + str(get_current_info[3]))
                 print(f"Image Name = {image_name}\n")
 
-                #  Burası açılacak return 'succeeded' satırı kapatılacak
+                # Robotun her hedef noktasına ulaştığında resim kaydedip sıradaki göreve geçmesi için
+                # aşağıdaki bölümün açılıp, return 'succeeded' satırının kapatılması gerekir.
                 """
                 get_response = self.get_image_client_func(image_name)
 
