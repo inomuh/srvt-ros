@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 
 <launch>
-	
-	
 	<node pkg="srvt_moveit" type="rokos_right_smach_node.py" name="rokos_right_smach_node" output="screen" />
-<!--
 	<node pkg="srvt_moveit" type="rokos_left_smach_node.py" name="rokos_left_smach_node" output="screen" />
--->
 </launch>
