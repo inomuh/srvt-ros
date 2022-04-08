@@ -24,6 +24,10 @@ v2.0 - 08.04.22
 ----------------------
 - All codes and subpackages revised
 
+v2.1 - 08.04.22
+---------------------
+- v2.0's bugfixes
+
 ### Credits
 
 <a href="http://valu3s.eu">
