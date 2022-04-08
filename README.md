@@ -28,6 +28,10 @@ v2.1 - 08.04.22
 ---------------------
 - v2.0's bugfixes
 
+v2.1.1 - 08.04.22
+---------------------
+- Minor changes on srvt_moveit launch files.
+
 ### Credits
 
 <a href="http://valu3s.eu">
