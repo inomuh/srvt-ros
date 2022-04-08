@@ -2,7 +2,7 @@
 <launch>
   <arg name="paused" default="false"/>
   <arg name="gazebo_gui" default="true"/>
-  <arg name="urdf_path" default="$(find rokos_description)/urdf/sag_rokos.urdf"/>
+  <arg name="urdf_path" default="$(find rokos_description)/urdf/right_rokos.urdf"/> <!--default-->
 
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
