@@ -20,6 +20,10 @@ v1.0.1 - 17.02.22
 ----------------------
 - Bugfixes
 
+v2.0 - 08.04.22
+----------------------
+- All codes and subpackages revised
+
 ### Credits
 
 <a href="http://valu3s.eu">
