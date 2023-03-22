@@ -34,8 +34,8 @@ v2.1.1 - 08.04.22
 
 ### Credits
 
-<a href="http://valu3s.eu">
-  <img align=left img src="https://upload.wikimedia.org/wikipedia/tr/d/d0/TUBITAK-Logo.jpg" 
+<a href="tubitak_logo">
+  <img align=left img src="https://upload.wikimedia.org/wikipedia/commons/0/05/T%C3%9CB%C4%B0TAK_logo.svg" 
        alt="tübitak_logo" height="100" >
 </a>
 
